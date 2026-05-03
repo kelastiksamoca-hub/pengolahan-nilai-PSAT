@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSAT - SD Santa Maria Monica</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a; /* Slate 900 - Deep Dark */
+        }
+
+        .neon-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Neon Glow Effects */
+        .neon-blue { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        .neon-purple { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+        .neon-green { border-color: #22c55e; box-shadow: 0 0 15px rgba(34, 197, 94, 0.3); }
+        .neon-orange { border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
+        .neon-pink { border-color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.3); }
+        .neon-yellow { border-color: #eab308; box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); }
+        .neon-cyan { border-color: #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+        .neon-red { border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+
+        .neon-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px currentColor;
+            z-index: 10;
+        }
+
+        /* Animated RGB Gradient Text */
+        .rgb-text {
+            background: linear-gradient(to right, #ef4444, #3b82f6, #22c55e, #eab308, #ef4444);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gradient-text 3s linear infinite;
+        }
+
+        @keyframes gradient-text {
+            to { background-position: 200% center; }
+        }
+
+        /* Modal animation */
+        .modal-enter {
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen overflow-x-hidden">
+
+    <div class="max-w-6xl mx-auto px-6 py-12">
+        <!-- Header Section -->
+        <header class="mb-12 text-center">
+            <div class="inline-block px-4 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-bold mb-4 tracking-widest uppercase">
+                Sistem Akademik Digital
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">
+                PENGOLAHAN NILAI <span class="rgb-text">PSAT</span>
+            </h1>
+            <h2 class="text-xl md:text-2xl font-bold text-slate-400 mb-8">
+                SD SANTA MARIA MONICA
+            </h2>
+
+            <!-- Search Bar -->
+            <div class="relative max-w-md mx-auto group">
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </div>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Cari Mata Pelajaran..."
+                    class="w-full pl-12 pr-4 py-4 bg-slate-800/50 border border-slate-700 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all text-white placeholder-slate-500"
+                >
+            </div>
+        </header>
+
+        <!-- Grid Section -->
+        <div id="subjectsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Cards will be injected here by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-20 bg-slate-800/30 rounded-3xl border border-dashed border-slate-700 mt-6">
+            <i data-lucide="search-x" class="w-12 h-12 text-slate-600 mx-auto mb-4"></i>
+            <p class="text-slate-500 text-lg">Mata pelajaran tidak ditemukan.</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-24 text-center text-slate-500 text-sm">
+            <div class="w-full h-px bg-gradient-to-right from-transparent via-slate-700 to-transparent mb-8"></div>
+            <p class="font-semibold text-slate-400">© <span id="currentYear"></span> SD SANTA MARIA MONICA</p>
+            <p class="text-xs mt-2 italic text-slate-600">Semangat Belajar, Raih Prestasi!</p>
+        </footer>
+    </div>
+
+    <!-- Iframe Modal Overlay -->
+    <div id="sheetModal" class="fixed inset-0 z-50 hidden flex flex-col bg-slate-950">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900 shadow-xl">
+            <div class="flex items-center gap-4">
+                <div id="modalIconContainer" class="p-2 rounded-xl"></div>
+                <div>
+                    <h2 id="modalTitle" class="font-bold text-lg md:text-xl text-white leading-none"></h2>
+                    <span class="text-xs text-slate-500 uppercase tracking-tighter">SD Santa Maria Monica • Pengolahan Nilai</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="p-2 hover:bg-red-500/20 rounded-full transition-all text-slate-400 hover:text-red-500 group">
+                <i data-lucide="circle-x" class="w-10 h-10 group-hover:scale-110"></i>
+            </button>
+        </div>
+        
+        <!-- Modal Content (Iframe) -->
+        <div class="relative flex-grow bg-black">
+            <!-- Loading indicator -->
+            <div id="iframeLoader" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-0">
+                <div class="relative w-16 h-16">
+                    <div class="absolute inset-0 rounded-full border-4 border-slate-700"></div>
+                    <div class="absolute inset-0 rounded-full border-4 border-t-cyan-500 animate-spin"></div>
+                </div>
+                <span class="mt-6 text-cyan-400 font-bold text-lg animate-pulse tracking-widest">MENGAMBIL DATA...</span>
+            </div>
+            <iframe id="sheetIframe" class="w-full h-full border-none relative z-10 opacity-0 transition-opacity duration-500" src="" onload="onIframeLoad()"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const subjects = [
+            { id: 1, name: "BAHASA INDONESIA", link: "https://docs.google.com/spreadsheets/d/1Np167eQsEDJDGFRwOGRLl8N8WlygjPR_p8LYHo_L5XM/preview", icon: "book-open", neonClass: "neon-blue", iconColor: "text-blue-400" },
+            { id: 2, name: "INFORMATIKA", link: "https://docs.google.com/spreadsheets/d/1KLJiBh21559yem9z4umdkYy_FXSzNv7NdXLZiQPf5YY/preview", icon: "terminal", neonClass: "neon-purple", iconColor: "text-purple-400" },
+            { id: 3, name: "IPAS", link: "https://docs.google.com/spreadsheets/d/1sNYHs2RJHQ1mvdsVGIrIu5WeJLcdXF0pqMHiYmWwS0I/preview", icon: "microscope", neonClass: "neon-green", iconColor: "text-green-400" },
+            { id: 4, name: "BAHASA SUNDA", link: "https://docs.google.com/spreadsheets/d/1eIbieF7_sOKNZs_qpSIymbRKCzmLXi0Ea7_OcCh8Szo/preview", icon: "languages", neonClass: "neon-orange", iconColor: "text-orange-400" },
+            { id: 5, name: "MATEMATIKA", link: "https://docs.google.com/spreadsheets/d/1ApPPO1dnCXOLarCn1RUpY9jOatvcEUOBejrnPjfaxNM/preview", icon: "binary", neonClass: "neon-red", iconColor: "text-red-400" },
+            { id: 6, name: "SENI RUPA", link: "https://docs.google.com/spreadsheets/d/1IuCS1NIDC829xFaS--U8yL0RWaYsEngyHttZjxRb4NQ/preview", icon: "palette", neonClass: "neon-pink", iconColor: "text-pink-400" },
+            { id: 7, name: "AGAMA KATOLIK", link: "https://docs.google.com/spreadsheets/d/1AAdVoiDYdHkqBlFA_8O27cPjTpaBWgPaoee5DIilxyA/preview", icon: "church", neonClass: "neon-yellow", iconColor: "text-yellow-400" },
+            { id: 8, name: "PJOK", link: "https://docs.google.com/spreadsheets/d/17B5OCJ9ACfIGaJsYHKCm98BcAvgcZ4NXtkXyXMamxfo/preview", icon: "trophy", neonClass: "neon-cyan", iconColor: "text-cyan-400" },
+            { id: 9, name: "PPKN", link: "https://docs.google.com/spreadsheets/d/1D3ELHElDHZa8ymSPu30kj1_wky9sZsB7x5lvNu_eWw0/preview", icon: "shield-check", neonClass: "neon-red", iconColor: "text-red-500" },
+            { id: 10, name: "SENI TARI", link: "https://docs.google.com/spreadsheets/d/1EqumXsX6WUrcm536XcSSE5SUSrIrhS6ld2L7pDDLPVE/preview", icon: "sparkles", neonClass: "neon-blue", iconColor: "text-blue-300" },
+            { id: 11, name: "SENI MUSIK", link: "https://docs.google.com/spreadsheets/d/1X_2Bf-uO6ggpwbzpwGq123ACqdYtvdty3rPx-93VtoA/preview", icon: "music-4", neonClass: "neon-purple", iconColor: "text-purple-300" },
+            { id: 12, name: "BAHASA INGGRIS", link: "https://docs.google.com/spreadsheets/d/1Z2LOIpep7oGxxhIYCKdxceq9kBfBdPQHpHpnRA71f2Y/preview", icon: "globe-2", neonClass: "neon-green", iconColor: "text-green-300" }
+        ];
+
+        function openModal(id) {
+            const subject = subjects.find(s => s.id === id);
+            const modal = document.getElementById('sheetModal');
+            const iframe = document.getElementById('sheetIframe');
+            const loader = document.getElementById('iframeLoader');
+            const title = document.getElementById('modalTitle');
+            const iconContainer = document.getElementById('modalIconContainer');
+
+            title.innerText = subject.name;
+            iconContainer.className = `p-2 rounded-xl bg-slate-800 border-2 ${subject.neonClass.replace('neon-', 'border-')}`;
+            iconContainer.innerHTML = `<i data-lucide="${subject.icon}" class="w-6 h-6 ${subject.iconColor}"></i>`;
+            
+            iframe.style.opacity = "0";
+            loader.style.display = "flex";
+            iframe.src = subject.link;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-enter');
+            document.body.style.overflow = 'hidden';
+            
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('sheetModal');
+            const iframe = document.getElementById('sheetIframe');
+            modal.classList.add('hidden');
+            iframe.src = "";
+            document.body.style.overflow = 'auto';
+        }
+
+        function onIframeLoad() {
+            const iframe = document.getElementById('sheetIframe');
+            const loader = document.getElementById('iframeLoader');
+            if(iframe.src !== "") {
+                iframe.style.opacity = "1";
+                loader.style.display = "none";
+            }
+        }
+
+        function renderSubjects(filter = "") {
+            const grid = document.getElementById('subjectsGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = "";
+
+            const filtered = subjects.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            filtered.forEach(subject => {
+                const card = document.createElement('div');
+                card.className = `neon-card ${subject.neonClass} p-8 rounded-[2rem] flex flex-col items-center text-center cursor-pointer relative overflow-hidden group`;
+                card.style.color = getComputedStyle(document.documentElement).getPropertyValue('--' + subject.neonClass);
+                card.onclick = () => openModal(subject.id);
+                
+                card.innerHTML = `
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                         <i data-lucide="${subject.icon}" class="w-20 h-20"></i>
+                    </div>
+                    <div class="mb-6 p-5 bg-slate-900/80 rounded-2xl shadow-inner relative z-10 border border-slate-700">
+                        <i data-lucide="${subject.icon}" class="w-10 h-10 ${subject.iconColor}"></i>
+                    </div>
+                    <h2 class="text-xl font-extrabold mb-8 text-white min-h-[3rem] flex items-center justify-center uppercase tracking-wider relative z-10">
+                        ${subject.name}
+                    </h2>
+                    <div class="w-full py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-cyan-400 font-bold group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-400 transition-all text-sm uppercase tracking-widest relative z-10 shadow-lg">
+                        Input Nilai
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSubjects();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                renderSubjects(e.target.value);
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "Escape") closeModal();
+            });
+        });
+    </script>
+</body>
+</html>
