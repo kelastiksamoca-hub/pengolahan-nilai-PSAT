@@ -126,11 +126,11 @@
                 <div id="modalIconContainer" class="p-2 rounded-xl"></div>
                 <div>
                     <h2 id="modalTitle" class="font-bold text-lg md:text-xl text-white leading-none"></h2>
-                    <span class="text-xs text-slate-500 uppercase tracking-tighter">Mode Input Aktif • SD Santa Maria Monica</span>
+                    <span class="text-xs text-slate-500 uppercase tracking-tighter">Mode Input Maksimal • SD Santa Maria Monica</span>
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <span class="hidden md:block text-xs text-amber-400 font-medium italic">Pastikan login akun Google untuk mengedit</span>
+                <span class="hidden md:block text-xs text-amber-400 font-medium italic">Area Input Luas Aktif</span>
                 <button onclick="closeModal()" class="p-2 hover:bg-red-500/20 rounded-full transition-all text-slate-400 hover:text-red-500 group">
                     <i data-lucide="circle-x" class="w-10 h-10 group-hover:scale-110"></i>
                 </button>
@@ -145,28 +145,31 @@
                     <div class="absolute inset-0 rounded-full border-4 border-slate-700"></div>
                     <div class="absolute inset-0 rounded-full border-4 border-t-cyan-500 animate-spin"></div>
                 </div>
-                <span class="mt-6 text-cyan-400 font-bold text-lg animate-pulse tracking-widest uppercase">Membuka Spreadsheet...</span>
+                <span class="mt-6 text-cyan-400 font-bold text-lg animate-pulse tracking-widest uppercase">Membuka Area Input...</span>
             </div>
-            <!-- Iframe dengan mode EDIT agar bisa mengetik -->
+            <!-- Iframe dengan rm=minimal untuk menyembunyikan toolbar -->
             <iframe id="sheetIframe" class="w-full h-full border-none relative z-10 opacity-0 transition-opacity duration-500" src="" onload="onIframeLoad()"></iframe>
         </div>
     </div>
 
     <script>
-        // Link diubah dari /preview menjadi /edit agar bisa diketik
+        /**
+         * Menggunakan parameter rm=minimal di akhir URL agar tampilan Google Sheets
+         * menyembunyikan toolbar dan fokus pada area sel (grid).
+         */
         const subjects = [
-            { id: 1, name: "BAHASA INDONESIA", link: "https://docs.google.com/spreadsheets/d/1Np167eQsEDJDGFRwOGRLl8N8WlygjPR_p8LYHo_L5XM/edit", icon: "book-open", neonClass: "neon-blue", iconColor: "text-blue-400" },
-            { id: 2, name: "INFORMATIKA", link: "https://docs.google.com/spreadsheets/d/1KLJiBh21559yem9z4umdkYy_FXSzNv7NdXLZiQPf5YY/edit", icon: "terminal", neonClass: "neon-purple", iconColor: "text-purple-400" },
-            { id: 3, name: "IPAS", link: "https://docs.google.com/spreadsheets/d/1sNYHs2RJHQ1mvdsVGIrIu5WeJLcdXF0pqMHiYmWwS0I/edit", icon: "microscope", neonClass: "neon-green", iconColor: "text-green-400" },
-            { id: 4, name: "BAHASA SUNDA", link: "https://docs.google.com/spreadsheets/d/1eIbieF7_sOKNZs_qpSIymbRKCzmLXi0Ea7_OcCh8Szo/edit", icon: "languages", neonClass: "neon-orange", iconColor: "text-orange-400" },
-            { id: 5, name: "MATEMATIKA", link: "https://docs.google.com/spreadsheets/d/1ApPPO1dnCXOLarCn1RUpY9jOatvcEUOBejrnPjfaxNM/edit", icon: "binary", neonClass: "neon-red", iconColor: "text-red-400" },
-            { id: 6, name: "SENI RUPA", link: "https://docs.google.com/spreadsheets/d/1IuCS1NIDC829xFaS--U8yL0RWaYsEngyHttZjxRb4NQ/edit", icon: "palette", neonClass: "neon-pink", iconColor: "text-pink-400" },
-            { id: 7, name: "AGAMA KATOLIK", link: "https://docs.google.com/spreadsheets/d/1AAdVoiDYdHkqBlFA_8O27cPjTpaBWgPaoee5DIilxyA/edit", icon: "church", neonClass: "neon-yellow", iconColor: "text-yellow-400" },
-            { id: 8, name: "PJOK", link: "https://docs.google.com/spreadsheets/d/17B5OCJ9ACfIGaJsYHKCm98BcAvgcZ4NXtkXyXMamxfo/edit", icon: "trophy", neonClass: "neon-cyan", iconColor: "text-cyan-400" },
-            { id: 9, name: "PPKN", link: "https://docs.google.com/spreadsheets/d/1D3ELHElDHZa8ymSPu30kj1_wky9sZsB7x5lvNu_eWw0/edit", icon: "shield-check", neonClass: "neon-red", iconColor: "text-red-500" },
-            { id: 10, name: "SENI TARI", link: "https://docs.google.com/spreadsheets/d/1EqumXsX6WUrcm536XcSSE5SUSrIrhS6ld2L7pDDLPVE/edit", icon: "sparkles", neonClass: "neon-blue", iconColor: "text-blue-300" },
-            { id: 11, name: "SENI MUSIK", link: "https://docs.google.com/spreadsheets/d/1X_2Bf-uO6ggpwbzpwGq123ACqdYtvdty3rPx-93VtoA/edit", icon: "music-4", neonClass: "neon-purple", iconColor: "text-purple-300" },
-            { id: 12, name: "BAHASA INGGRIS", link: "https://docs.google.com/spreadsheets/d/1Z2LOIpep7oGxxhIYCKdxceq9kBfBdPQHpHpnRA71f2Y/edit", icon: "globe-2", neonClass: "neon-green", iconColor: "text-green-300" }
+            { id: 1, name: "BAHASA INDONESIA", link: "https://docs.google.com/spreadsheets/d/1Np167eQsEDJDGFRwOGRLl8N8WlygjPR_p8LYHo_L5XM/edit?rm=minimal", icon: "book-open", neonClass: "neon-blue", iconColor: "text-blue-400" },
+            { id: 2, name: "INFORMATIKA", link: "https://docs.google.com/spreadsheets/d/1KLJiBh21559yem9z4umdkYy_FXSzNv7NdXLZiQPf5YY/edit?rm=minimal", icon: "terminal", neonClass: "neon-purple", iconColor: "text-purple-400" },
+            { id: 3, name: "IPAS", link: "https://docs.google.com/spreadsheets/d/1sNYHs2RJHQ1mvdsVGIrIu5WeJLcdXF0pqMHiYmWwS0I/edit?rm=minimal", icon: "microscope", neonClass: "neon-green", iconColor: "text-green-400" },
+            { id: 4, name: "BAHASA SUNDA", link: "https://docs.google.com/spreadsheets/d/1eIbieF7_sOKNZs_qpSIymbRKCzmLXi0Ea7_OcCh8Szo/edit?rm=minimal", icon: "languages", neonClass: "neon-orange", iconColor: "text-orange-400" },
+            { id: 5, name: "MATEMATIKA", link: "https://docs.google.com/spreadsheets/d/1ApPPO1dnCXOLarCn1RUpY9jOatvcEUOBejrnPjfaxNM/edit?rm=minimal", icon: "binary", neonClass: "neon-red", iconColor: "text-red-400" },
+            { id: 6, name: "SENI RUPA", link: "https://docs.google.com/spreadsheets/d/1IuCS1NIDC829xFaS--U8yL0RWaYsEngyHttZjxRb4NQ/edit?rm=minimal", icon: "palette", neonClass: "neon-pink", iconColor: "text-pink-400" },
+            { id: 7, name: "AGAMA KATOLIK", link: "https://docs.google.com/spreadsheets/d/1AAdVoiDYdHkqBlFA_8O27cPjTpaBWgPaoee5DIilxyA/edit?rm=minimal", icon: "church", neonClass: "neon-yellow", iconColor: "text-yellow-400" },
+            { id: 8, name: "PJOK", link: "https://docs.google.com/spreadsheets/d/17B5OCJ9ACfIGaJsYHKCm98BcAvgcZ4NXtkXyXMamxfo/edit?rm=minimal", icon: "trophy", neonClass: "neon-cyan", iconColor: "text-cyan-400" },
+            { id: 9, name: "PPKN", link: "https://docs.google.com/spreadsheets/d/1D3ELHElDHZa8ymSPu30kj1_wky9sZsB7x5lvNu_eWw0/edit?rm=minimal", icon: "shield-check", neonClass: "neon-red", iconColor: "text-red-500" },
+            { id: 10, name: "SENI TARI", link: "https://docs.google.com/spreadsheets/d/1EqumXsX6WUrcm536XcSSE5SUSrIrhS6ld2L7pDDLPVE/edit?rm=minimal", icon: "sparkles", neonClass: "neon-blue", iconColor: "text-blue-300" },
+            { id: 11, name: "SENI MUSIK", link: "https://docs.google.com/spreadsheets/d/1X_2Bf-uO6ggpwbzpwGq123ACqdYtvdty3rPx-93VtoA/edit?rm=minimal", icon: "music-4", neonClass: "neon-purple", iconColor: "text-purple-300" },
+            { id: 12, name: "BAHASA INGGRIS", link: "https://docs.google.com/spreadsheets/d/1Z2LOIpep7oGxxhIYCKdxceq9kBfBdPQHpHpnRA71f2Y/edit?rm=minimal", icon: "globe-2", neonClass: "neon-green", iconColor: "text-green-300" }
         ];
 
         function openModal(id) {
@@ -184,7 +187,6 @@
             iframe.style.opacity = "0";
             loader.style.display = "flex";
             
-            // Link sudah menggunakan /edit agar bisa diketik
             iframe.src = subject.link;
             
             modal.classList.remove('hidden');
@@ -208,7 +210,6 @@
             if(iframe.src !== "") {
                 iframe.style.opacity = "1";
                 loader.style.display = "none";
-                // Fokus ke iframe agar bisa langsung mengetik
                 iframe.focus();
             }
         }
